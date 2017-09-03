@@ -76,6 +76,9 @@ passport.deserializeUser(function(id, done) {
   console.dir(id);
   let err = null;
 
+  // I could also use the id passed to do some sort of local database lookup
+  // and get that data to place into req.user. That would save space in session.
+
   // now this second argument is what gets placed in req.user by passport.
   // I could place everything in req.user, but here I'm only putting the
   // displayName and the link to a Google profile image for the user.
