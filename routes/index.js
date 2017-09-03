@@ -16,9 +16,12 @@ router.get('/', function(req, res, next) {
   }
 });
 
+// this is the route we hit to initiate the auth with google
 router.get('/auth/google',
   passport.authenticate('google', { scope: ['profile'] }));
 
+
+// this is the redirect that Google calls once the user has passed Google Auth.
 router.get('/auth/redirect',
   passport.authenticate('google', { failureRedirect: '/login' }),
   function(req, res) {

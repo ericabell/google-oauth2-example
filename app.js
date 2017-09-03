@@ -38,8 +38,7 @@ passport.use(new GoogleStrategy({
 
     // here is where I would extract my app-specific info about this user
     // and then pass it on in cb as an object.
-    // in this case, I'm just passing the displayName I get back from Google
-    // as username
+    // in this case, I'm passing all the info I get from profile on to serializeUser.
 
     // this is my opportunity to take any information from the profile
     // that I get from Google and pass it along to serializeUser where
@@ -47,10 +46,10 @@ passport.use(new GoogleStrategy({
     // with the Google profile here, I won't get it back unless the user has
     // to re-authenticate with Google.
 
+    // I can also store the accessToken or refreshToken somewhere if I need them
+    // to make later requests against the Google API.
+
     return cb(null, {profile: profile['_json']})
-    // User.findOrCreate({ googleId: profile.id }, function (err, user) {
-    //   return cb(err, user);
-    // });
   }
 ));
 
@@ -61,6 +60,10 @@ passport.serializeUser(function(user, done) {
   console.log('in serializeUser, receives user from Google Strategy done');
   console.log(`user:`);
   console.dir(user);
+
+  // the call to done below tells my app that I want to store the object
+  // {profile. user.profile} in session.
+
   done(null, {profile: user.profile});
 });
 
@@ -74,6 +77,8 @@ passport.deserializeUser(function(id, done) {
   let err = null;
 
   // now this second argument is what gets placed in req.user by passport.
+  // I could place everything in req.user, but here I'm only putting the
+  // displayName and the link to a Google profile image for the user.
   done(err, {displayName: id.profile.displayName, profileImage: id.profile.image.url});
 });
 
